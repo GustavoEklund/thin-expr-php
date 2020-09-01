@@ -1,0 +1,26 @@
+{
+    "name": "thenrise/expr-php",
+    "description": "Super lightweight PHP RESTful API Framework",
+    "type": "library",
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "phpunit/phpunit": "^6.4"
+    },
+    "license": "MIT",
+    "keywords": ["restful", "expr", "lightwight"],
+    "authors": [
+        {
+            "name": "Gustavo Eklund",
+            "email": "gustavo04616@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.4",
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": { "Expr\\": "src", "Controllers\\": "app" }
+    }
+}
