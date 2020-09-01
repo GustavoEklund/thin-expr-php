@@ -1,5 +1,6 @@
 {
     "name": "thenrise/expr-php",
+    "version": "1.0",
     "description": "Super lightweight PHP RESTful API Framework",
     "type": "library",
     "require-dev": {
