@@ -8,27 +8,16 @@ use RuntimeException;
  * Class Route
  * @package Expr
  */
-class Route
+class Route extends Dispatch
 {
-    private ExprBuilder $builder;
-
-    /**
-     * Route constructor.
-     * @param ExprBuilder $builder
-     */
-    public function __construct(ExprBuilder $builder)
-    {
-        $this->builder = $builder;
-    } // __construct
-
-
     /**
      * Se o método do middleware retornar falso ou null, $next não será executado.
      * Se o método retornar um valor válido, então é passado como terceiro parâmetro para o controller.
      * @param string $uri Uri para conversão de parâmertros em variáveis
      * @param array $action Define um controller ou uma lista de ações a serem executados
+     * @return bool
      */
-	public function add(string $uri, array $action): void
+	public function add(string $uri, array $action): bool
 	{
         if (!isset($_GET['url'])) {
             throw new RuntimeException('Undefined "url" index on $_GET.');
@@ -37,7 +26,7 @@ class Route
 		$parsed_route = $this->parseRoute($uri, $_GET['url']);
 
 		if ($parsed_route === null) {
-			return;
+			return false;
 		} // if
 
 		$response = null;
@@ -46,15 +35,14 @@ class Route
         foreach ($action as $key => $action_item) {
             [$controller, $function] = explode('@', $action_item);
 
-            $response = (new Dispatch($this->builder))
-                ->request(
-                    $controller,
-                    $function,
-                    $parsed_route,
-                ); // request
+            $response = $this->request(
+                $controller,
+                $function,
+                $parsed_route,
+            ); // request
 
             if ($response === null) {
-                return;
+                return false;
             } // if
 
             if ($size === ($key + 1)) {
@@ -62,15 +50,15 @@ class Route
             } // if
         } // foreach
 
-        exit;
-	} // addRoute
+        return true;
+	} // add
 
 	/**
 	 * @param string $path
 	 * @param string $request_path
 	 * @return array|null
 	 */
-	private function parseRoute(string $path, string $request_path): ?array
+	public function parseRoute(string $path, string $request_path): ?array
 	{
 		if ($path === '*') {
 			return [];

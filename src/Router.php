@@ -6,18 +6,9 @@ namespace Expr;
  * Class Router
  * @package Expr
  */
-final class Router
+final class Router extends Route
 {
-    private ExprBuilder $builder;
-
-    /**
-     * Router constructor.
-     * @param ExprBuilder $builder
-     */
-	public function __construct(ExprBuilder $builder)
-	{
-        $this->builder = $builder;
-	} // __construct
+    private bool $route_matched = false;
 
 	/**
 	 * @param string $uri Uri para conversão de parâmertros em variáveis
@@ -28,11 +19,11 @@ final class Router
 	 */
 	public function post(string $uri, ...$action): void
 	{
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+		if ($this->route_matched || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
 			return;
 		} // if
 
-        (new Route($this->builder))->add($uri, $action);
+        $this->route_matched = $this->add($uri, $action);
 	} // post
 
 	/**
@@ -44,11 +35,11 @@ final class Router
 	 */
 	public function get(string $uri, ...$action): void
 	{
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+		if ($this->route_matched || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'GET') {
 			return;
 		} // if
 
-        (new Route($this->builder))->add($uri, $action);
+        $this->route_matched = $this->add($uri, $action);
 	} // get
 
 	/**
@@ -60,11 +51,11 @@ final class Router
 	 */
 	public function put(string $uri, ...$action): void
 	{
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'PUT') {
+		if ($this->route_matched || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'PUT') {
 			return;
 		} // if
 
-        (new Route($this->builder))->add($uri, $action);
+        $this->route_matched = $this->add($uri, $action);
 	} // put
 
 	/**
@@ -76,11 +67,11 @@ final class Router
 	 */
 	public function patch(string $uri, ...$action): void
 	{
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+		if ($this->route_matched || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'PATCH') {
 			return;
 		} // if
 
-        (new Route($this->builder))->add($uri, $action);
+        $this->route_matched = $this->add($uri, $action);
 	} // patch
 
 	/**
@@ -92,11 +83,11 @@ final class Router
 	 */
 	public function delete(string $uri, ...$action): void
 	{
-		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+		if ($this->route_matched || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
 			return;
 		} // if
 
-        (new Route($this->builder))->add($uri, $action);
+        $this->route_matched = $this->add($uri, $action);
 	} // put
 
 	/**
@@ -109,6 +100,10 @@ final class Router
 	 */
 	public function any(string $uri, ...$action): void
 	{
-        (new Route($this->builder))->add($uri, $action);
+	    if ($this->route_matched) {
+	        return;
+        } // if
+
+        $this->route_matched = $this->add($uri, $action);
 	} // get
 } // ClassRoutes

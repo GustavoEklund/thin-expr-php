@@ -2,6 +2,8 @@
 
 namespace Expr;
 
+use TypeError;
+
 /**
  * Class ExprBuilder
  * @package Expr
@@ -32,9 +34,14 @@ class ExprBuilder
     /**
      * @param string $path
      * @return ExprBuilder
+     * @throws TypeError
      */
     public function setPathToControllers(string $path): ExprBuilder
     {
+        if (!is_dir($path)) {
+            throw new TypeError('The path to controllers must be a valid directory.');
+        } // if
+
         $this->path_to_controllers = $path;
         return $this;
     } // setPathToControllers

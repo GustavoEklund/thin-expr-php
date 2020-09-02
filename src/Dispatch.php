@@ -38,7 +38,6 @@ class Dispatch
         $this->builder = $builder;
     } // __construct
 
-
     /**
      * @param string $controller
      * @param string $function
