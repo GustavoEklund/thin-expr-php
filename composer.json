@@ -1,6 +1,6 @@
 {
     "name": "thenrise/expr-php",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Super lightweight PHP RESTful API Framework",
     "type": "library",
     "require-dev": {
@@ -21,6 +21,12 @@
         "ext-json": "*"
     },
     "autoload": {
-        "psr-4": { "Expr\\": "src", "Controllers\\": "app" }
+        "psr-4": {
+            "Expr\\": "./src/",
+            "Expr\\Tests\\Controllers\\": "./tests/Controllers/"
+        }
+    },
+    "autoload-dev": {
+        "Expr\\Tests\\": "./tests/"
     }
 }
