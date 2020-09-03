@@ -57,7 +57,12 @@ class Dispatch
 			$this->setMethod($function);
 
 			// Execute o método contido no Controller ([Controller, método], [parâmetros do método])
-			return call_user_func([$this->getController(), $this->getMethod()], $request, $response);
+			return call_user_func(
+			    [$this->getController(), $this->getMethod()],
+                $request,
+                $response,
+                $this->builder->getResource(),
+            ); // call_user_func
 		} catch (PDOException $pdo_exception) {
 			// http_response_code(503);
 

@@ -15,12 +15,20 @@ class ExprBuilder
     private bool $production_mode;
 
     /**
+     * Any resource, configuration or dependency you need to inject inside the controllers
+     * @var mixed $resource
+     */
+    private $resource;
+
+    /**
      * Builder constructor.
      */
     public function __construct()
     {
         $this->path_to_controllers = '../../';
+        $this->controllers_namespace = 'Controllers\\';
         $this->production_mode = false;
+        $this->resource = null;
     } // __construct
 
     /**
@@ -79,6 +87,24 @@ class ExprBuilder
     public function setProductionMode(bool $mode): ExprBuilder
     {
         $this->production_mode = $mode;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * @param mixed $resource
+     * @return ExprBuilder
+     */
+    public function setResource($resource): ExprBuilder
+    {
+        $this->resource = $resource;
         return $this;
     } // setProductionMode
 } // Builder
