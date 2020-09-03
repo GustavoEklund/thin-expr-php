@@ -23,10 +23,8 @@
     "autoload": {
         "psr-4": {
             "Expr\\": "./src/",
+            "Expr\\Tests\\": "./tests/",
             "Expr\\Tests\\Controllers\\": "./tests/Controllers/"
         }
-    },
-    "autoload-dev": {
-        "Expr\\Tests\\": "./tests/"
     }
 }

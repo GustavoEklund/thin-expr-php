@@ -46,4 +46,13 @@ class ExprBuilderTest extends TestCase
         $this->builder->setProductionMode(false);
         self::assertFalse($this->builder->isProductionMode());
     } // test_can_set_production_mode
+
+    public function test_can_set_resource(): void
+    {
+        $this->builder->setResource(['anything' => true]);
+        self::assertArrayHasKey('anything', $this->builder->getResource());
+
+        $this->builder->setResource('test');
+        self::assertEquals('test', $this->builder->getResource());
+    } // test_can_set_resource
 } // ExprBuilderTest
