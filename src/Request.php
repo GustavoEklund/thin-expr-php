@@ -86,12 +86,23 @@ class Request
     } // getHeader
 
     /**
+     * @param bool $sanitize
      * @return array
      */
-    public function getBody(): array
+    public function getBody(bool $sanitize = true): array
     {
-        return $this->body;
-    }
+        if (!$sanitize) {
+            return $this->body;
+        } // if
+
+        $sanitized_body = [];
+
+        foreach ($this->body as $key => $value) {
+            $sanitized_body[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+        } // foreach
+
+        return $sanitized_body;
+    } // getBody
 
     /**
      * @param array $body
