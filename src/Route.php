@@ -39,6 +39,7 @@ class Route extends Dispatch
                 $controller,
                 $function,
                 $parsed_route,
+                $response,
             ); // request
 
             if ($response === null) {

@@ -42,9 +42,10 @@ class Dispatch
      * @param string $controller
      * @param string $function
      * @param array $params
+     * @param mixed $resource
      * @return string|null
      */
-	public function request(string $controller, string $function, array $params): ?string
+	public function request(string $controller, string $function, array $params, $resource): ?string
 	{
 		try {
 			$request = new Request();
@@ -62,6 +63,7 @@ class Dispatch
                 $request,
                 $response,
                 $this->builder->getResource(),
+                $resource,
             ); // call_user_func
 		} catch (PDOException $pdo_exception) {
 			// http_response_code(503);
