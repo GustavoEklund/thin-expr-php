@@ -78,7 +78,7 @@ class Dispatch
             error_log(
                 date('[Y-m-d H:i:s] ').$pdo_exception."\n\n\n",
                 3,
-                '../../log.txt'
+                './log.txt'
             ); // error_log
 
             return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
@@ -99,7 +99,7 @@ class Dispatch
             error_log(
                 date('[Y-m-d H:i:s] ').$exception."\n\n\n",
                 3,
-                '../../log.txt'
+                './log.txt'
             ); // error_log
 
             return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
@@ -120,7 +120,7 @@ class Dispatch
             error_log(
                 date('[Y-m-d H:i:s] ').$error."\n\n\n",
                 3,
-                '../../log.txt'
+                './log.txt'
             ); // error_log
 
             return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
