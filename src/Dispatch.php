@@ -43,9 +43,9 @@ class Dispatch
      * @param string $function
      * @param array $params
      * @param mixed $resource
-     * @return string|null
+     * @return mixed
      */
-	public function request(string $controller, string $function, array $params, $resource): ?string
+	public function request(string $controller, string $function, array $params, $resource)
 	{
 		try {
 			$request = new Request();
@@ -74,14 +74,13 @@ class Dispatch
                 $error_message = "Erro código [{$pdo_exception->getCode()} - {$pdo_exception->getLine()} - {$pdo_exception}]";
             } // else
 
-            /** @noinspection ForgottenDebugOutputInspection */
             error_log(
                 date('[Y-m-d H:i:s] ').$pdo_exception."\n\n\n",
                 3,
                 './log.txt'
             ); // error_log
 
-            return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
+            return '{"error":{"code":'.$pdo_exception->getCode().',"message":"'.$error_message.'"},"data":null}"';
 		} catch (Exception $exception) {
 			// if ($exception->getCode()) {
 			//     http_response_code($exception->getCode());
@@ -95,14 +94,13 @@ class Dispatch
                 $error_message = $exception;
             } // else
 
-            /** @noinspection ForgottenDebugOutputInspection */
             error_log(
                 date('[Y-m-d H:i:s] ').$exception."\n\n\n",
                 3,
                 './log.txt'
             ); // error_log
 
-            return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
+            return '{"error":{"code":'.$exception->getCode().',"message":"'.$error_message.'"},"data":null}"';
 		} catch (Error $error) {
             // if ($exception->getCode()) {
             //     http_response_code($exception->getCode());
@@ -116,14 +114,13 @@ class Dispatch
                 $error_message = $error;
             } // else
 
-            /** @noinspection ForgottenDebugOutputInspection */
             error_log(
                 date('[Y-m-d H:i:s] ').$error."\n\n\n",
                 3,
                 './log.txt'
             ); // error_log
 
-            return "{\"error\":{\"code\":500,\"message\":\"{$error_message}\"},\"data\":null}";
+            return '{"error":{"code":'.$error->getCode().',"message":"'.$error_message.'"},"data":null}"';
         } // catch
 	} // request
 
@@ -170,7 +167,7 @@ class Dispatch
 	 */
     public function setMethod(string $method): void
     {
-        // Se o método que etiver na url existir, execute-o
+        // Se o método que estiver na url existir, execute-o
         if (!method_exists($this->getController(), $method)) {
 			$class_name = get_class($this->getController());
 			throw new TypeError("The method \"{$method}\" doesn't exist on controller {$class_name}.", 501);

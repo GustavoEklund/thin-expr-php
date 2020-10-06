@@ -2,6 +2,7 @@
 
 namespace Expr;
 
+use JsonException;
 use RuntimeException;
 
 /**
@@ -13,9 +14,10 @@ class Route extends Dispatch
     /**
      * Se o método do middleware retornar falso ou null, $next não será executado.
      * Se o método retornar um valor válido, então é passado como terceiro parâmetro para o controller.
-     * @param string $uri Uri para conversão de parâmertros em variáveis
+     * @param string $uri Uri para conversão de parâmetros em variáveis
      * @param array $action Define um controller ou uma lista de ações a serem executados
      * @return bool
+     * @throws JsonException
      */
 	public function add(string $uri, array $action): bool
 	{
@@ -45,6 +47,25 @@ class Route extends Dispatch
             if ($response === null) {
                 return false;
             } // if
+
+            if (
+                is_string($response)
+                && $response[0] === '{'
+                && $response[strlen($response) - 1] === '}'
+            ) {
+
+                $response_array = json_decode(
+                    $response,
+                    true,
+                    512,
+                    JSON_THROW_ON_ERROR
+                );
+
+                if (!isset($response_array['error']) || !$response_array['error']) {
+                    echo $response;
+                    return true;
+                }
+            }
 
             if ($size === ($key + 1)) {
                 echo $response;
