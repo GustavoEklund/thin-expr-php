@@ -80,7 +80,7 @@ class Dispatch
                 './log.txt'
             ); // error_log
 
-            return '{"error":{"code":'.$pdo_exception->getCode().',"message":"'.$error_message.'"},"data":null}"';
+            return '{"error":{"code":'.$pdo_exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Exception $exception) {
 			// if ($exception->getCode()) {
 			//     http_response_code($exception->getCode());
@@ -100,7 +100,7 @@ class Dispatch
                 './log.txt'
             ); // error_log
 
-            return '{"error":{"code":'.$exception->getCode().',"message":"'.$error_message.'"},"data":null}"';
+            return '{"error":{"code":'.$exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Error $error) {
             // if ($exception->getCode()) {
             //     http_response_code($exception->getCode());
@@ -120,7 +120,7 @@ class Dispatch
                 './log.txt'
             ); // error_log
 
-            return '{"error":{"code":'.$error->getCode().',"message":"'.$error_message.'"},"data":null}"';
+            return '{"error":{"code":'.$error->getCode().',"message":"'.$error_message.'"},"data":null}';
         } // catch
 	} // request
 

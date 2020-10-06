@@ -58,7 +58,6 @@ class Route extends Dispatch
                     $response,
                     true,
                     512,
-                    JSON_THROW_ON_ERROR
                 );
 
                 if (!isset($response_array['error']) || !$response_array['error']) {
