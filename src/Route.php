@@ -60,7 +60,7 @@ class Route extends Dispatch
                     512,
                 );
 
-                if (!isset($response_array['error']) || !$response_array['error']) {
+                if (isset($response_array['error']) && $response_array['error']) {
                     echo $response;
                     return true;
                 }
