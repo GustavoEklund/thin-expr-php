@@ -56,7 +56,14 @@ class Request
      */
     public function __construct()
     {
-    	$php_input = file_get_contents('php://input');
+        $php_input = preg_replace(
+            '/[[:cntrl:]]/',
+            '',
+            filter_var(
+                file_get_contents('php://input'),
+                FILTER_SANITIZE_SPECIAL_CHARS
+            )
+        );
 		$request_url = explode('/', filter_var((string)@$_GET['url'], FILTER_SANITIZE_URL));
 
 		if ($php_input === '') {
