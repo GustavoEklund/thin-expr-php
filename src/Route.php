@@ -53,14 +53,13 @@ class Route extends Dispatch
                 && $response[0] === '{'
                 && $response[strlen($response) - 1] === '}'
             ) {
-
                 $response_array = json_decode(
                     $response,
                     true,
-                    512,
+                    512
                 );
 
-                if (isset($response_array['error']) && $response_array['error']) {
+                if (!empty($response_array['error'])) {
                     echo $response;
                     return true;
                 }
