@@ -80,6 +80,8 @@ class Dispatch
                 './log.txt'
             ); // error_log
 
+            $error_message = addslashes($error_message);
+
             return '{"error":{"code":'.$pdo_exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Exception $exception) {
 			// if ($exception->getCode()) {
@@ -99,6 +101,8 @@ class Dispatch
                 3,
                 './log.txt'
             ); // error_log
+
+            $error_message = addslashes($error_message);
 
             return '{"error":{"code":'.$exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Error $error) {
