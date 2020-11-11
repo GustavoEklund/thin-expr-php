@@ -98,7 +98,7 @@ class Dispatch
             $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME']."\n";
             $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI']."\n";
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
-            $log_message .= 'BODY: '.$body;
+            $log_message .= "BODY: {$body}\n\n\n";
 
             error_log(
                 $log_message,
@@ -145,7 +145,7 @@ class Dispatch
             $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME']."\n";
             $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI']."\n";
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
-            $log_message .= 'BODY: '.$body;
+            $log_message .= "BODY: {$body}\n\n\n";
 
             error_log(
                 $log_message,
@@ -192,7 +192,7 @@ class Dispatch
             $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME']."\n";
             $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI']."\n";
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
-            $log_message .= 'BODY: '.$body;
+            $log_message .= "BODY: {$body}\n\n\n";
 
             error_log(
                 $log_message,
