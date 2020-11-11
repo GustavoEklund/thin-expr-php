@@ -3,6 +3,7 @@
 namespace Expr;
 
 use Error;
+use JsonException;
 use TypeError;
 use Exception;
 use PDOException;
@@ -74,8 +75,33 @@ class Dispatch
                 $error_message = "Erro código [{$pdo_exception->getCode()} - {$pdo_exception->getLine()} - {$pdo_exception}]";
             } // else
 
+            $error_date = date('[Y-m-d H:i:s]');
+            $php_input = file_get_contents('php://input');
+
+            if (empty($php_input)) {
+                $post = $_POST;
+            } else {
+                $php_input_array = [];
+
+                try {
+                    $php_input_array = json_decode($php_input, true, 512, JSON_THROW_ON_ERROR);
+                } catch (JsonException $json_exception) {}
+
+                $post = array_merge($_POST, $php_input_array);
+            }
+
+            $body = http_build_query($post);
+
+            $log_message = "{$error_date} {$pdo_exception}\n";
+            $log_message .= 'REQUEST_METHOD: '.@$_SERVER['REQUEST_METHOD'].'\n';
+            $log_message .= 'REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].'\n';
+            $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].'\n';
+            $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI'].'\n';
+            $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO'].'\n';
+            $log_message .= 'BODY: '.$body;
+
             error_log(
-                date('[Y-m-d H:i:s] ').$pdo_exception."\n\n\n",
+                $log_message,
                 3,
                 './log.txt'
             ); // error_log
@@ -96,8 +122,33 @@ class Dispatch
                 $error_message = $exception;
             } // else
 
+            $error_date = date('[Y-m-d H:i:s]');
+            $php_input = file_get_contents('php://input');
+
+            if (empty($php_input)) {
+                $post = $_POST;
+            } else {
+                $php_input_array = [];
+
+                try {
+                    $php_input_array = json_decode($php_input, true, 512, JSON_THROW_ON_ERROR);
+                } catch (JsonException $json_exception) {}
+
+                $post = array_merge($_POST, $php_input_array);
+            }
+
+            $body = http_build_query($post);
+
+            $log_message = "{$error_date} {$exception}\n";
+            $log_message .= 'REQUEST_METHOD: '.@$_SERVER['REQUEST_METHOD'].'\n';
+            $log_message .= 'REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].'\n';
+            $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].'\n';
+            $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI'].'\n';
+            $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO'].'\n';
+            $log_message .= 'BODY: '.$body;
+
             error_log(
-                date('[Y-m-d H:i:s] ').$exception."\n\n\n",
+                $log_message,
                 3,
                 './log.txt'
             ); // error_log
@@ -118,8 +169,33 @@ class Dispatch
                 $error_message = $error;
             } // else
 
+            $error_date = date('[Y-m-d H:i:s]');
+            $php_input = file_get_contents('php://input');
+
+            if (empty($php_input)) {
+                $post = $_POST;
+            } else {
+                $php_input_array = [];
+
+                try {
+                    $php_input_array = json_decode($php_input, true, 512, JSON_THROW_ON_ERROR);
+                } catch (JsonException $json_exception) {}
+
+                $post = array_merge($_POST, $php_input_array);
+            }
+
+            $body = http_build_query($post);
+
+            $log_message = "{$error_date} {$error}\n";
+            $log_message .= 'REQUEST_METHOD: '.@$_SERVER['REQUEST_METHOD'].'\n';
+            $log_message .= 'REMOTE_ADDR: '.@$_SERVER['REMOTE_ADDR'].'\n';
+            $log_message .= 'SERVER_NAME: '.@$_SERVER['SERVER_NAME'].'\n';
+            $log_message .= 'REQUEST_URI: '.@$_SERVER['REQUEST_URI'].'\n';
+            $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO'].'\n';
+            $log_message .= 'BODY: '.$body;
+
             error_log(
-                date('[Y-m-d H:i:s] ').$error."\n\n\n",
+                $log_message,
                 3,
                 './log.txt'
             ); // error_log
