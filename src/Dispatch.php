@@ -14,30 +14,14 @@ use PDOException;
  */
 class Dispatch
 {
-	/**
-	 * Métodos passados na url.
-	 */
 	private string $method;
-
-	/**
-     * Controlador a ser instanciado
-     */
 	private $controller;
-
-    /**
-     * Injeção de configurações
-     * @var ExprBuilder $builder
-     */
 	private ExprBuilder $builder;
 
-    /**
-     * Dispatch constructor.
-     * @param ExprBuilder $builder
-     */
     public function __construct(ExprBuilder $builder)
     {
         $this->builder = $builder;
-    } // __construct
+    }
 
     /**
      * @param string $controller
@@ -47,12 +31,11 @@ class Dispatch
      * @return mixed
      */
 	public function request(string $controller, string $function, array $params, $resource)
-	{
+    {
 		try {
 			$request = new Request();
 			$response = new Response();
 
-			// Sobrescrever os parâmetros com as configurações da rota
 			$request->setParams($params);
 
 			$this->setController($controller, $this->builder->getPathToControllers());
@@ -65,15 +48,15 @@ class Dispatch
                 $response,
                 $this->builder->getResource(),
                 $resource,
-            ); // call_user_func
+            );
 		} catch (PDOException $pdo_exception) {
-			// http_response_code(503);
+			http_response_code(503);
 
             if ($this->builder->isProductionMode()) {
                 $error_message = "Erro código [{$pdo_exception->getCode()} - {$pdo_exception->getLine()}]";
             } else {
                 $error_message = "Erro código [{$pdo_exception->getCode()} - {$pdo_exception->getLine()} - {$pdo_exception}]";
-            } // else
+            }
 
             $error_date = date('[Y-m-d H:i:s]');
             $php_input = file_get_contents('php://input');
@@ -100,27 +83,23 @@ class Dispatch
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
             $log_message .= "BODY: {$body}\n\n\n";
 
-            error_log(
-                $log_message,
-                3,
-                './log.txt'
-            ); // error_log
+            error_log($log_message, 3, './log.txt');
 
-            $error_message = preg_replace('/\n|\r|\\\\|"/', ' ', $error_message);
+            $error_message = preg_replace('/[\n\r\\\\"]/', ' ', $error_message);
 
             return '{"error":{"code":'.$pdo_exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Exception $exception) {
-			// if ($exception->getCode()) {
-			//     http_response_code($exception->getCode());
-			// } else {
-			//    http_response_code(501);
-			// } // else
+			if ($exception->getCode()) {
+			    http_response_code($exception->getCode());
+			} else {
+			   http_response_code(501);
+			}
 
             if ($this->builder->isProductionMode()) {
                 $error_message = $exception->getMessage();
             } else {
                 $error_message = $exception;
-            } // else
+            }
 
             $error_date = date('[Y-m-d H:i:s]');
             $php_input = file_get_contents('php://input');
@@ -147,27 +126,23 @@ class Dispatch
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
             $log_message .= "BODY: {$body}\n\n\n";
 
-            error_log(
-                $log_message,
-                3,
-                './log.txt'
-            ); // error_log
+            error_log($log_message, 3, './log.txt');
 
-            $error_message = preg_replace('/\n|\r|\\\\|"/', ' ', $error_message);
+            $error_message = preg_replace('/[\n\r\\\\"]/', ' ', $error_message);
 
             return '{"error":{"code":'.$exception->getCode().',"message":"'.$error_message.'"},"data":null}';
 		} catch (Error $error) {
-            // if ($exception->getCode()) {
-            //     http_response_code($exception->getCode());
-            // } else {
-            //    http_response_code(501);
-            // } // else
+             if ($error->getCode()) {
+                 http_response_code($error->getCode());
+             } else {
+                http_response_code(501);
+             }
 
             if ($this->builder->isProductionMode()) {
                 $error_message = $error->getMessage();
             } else {
                 $error_message = $error;
-            } // else
+            }
 
             $error_date = date('[Y-m-d H:i:s]');
             $php_input = file_get_contents('php://input');
@@ -194,68 +169,49 @@ class Dispatch
             $log_message .= 'PATH_INFO: '.@$_SERVER['PATH_INFO']."\n";
             $log_message .= "BODY: {$body}\n\n\n";
 
-            error_log(
-                $log_message,
-                3,
-                './log.txt'
-            ); // error_log
+            error_log($log_message, 3, './log.txt');
 
-            $error_message = preg_replace('/\n|\r|\\\\|"/', ' ', $error_message);
+            $error_message = preg_replace('/[\n\r\\\\"]/', ' ', $error_message);
 
             return '{"error":{"code":'.$error->getCode().',"message":"'.$error_message.'"},"data":null}';
-        } // catch
-	} // request
+        }
+	}
 
     /** @return mixed */
     public function getController()
     {
         return $this->controller;
-    } // getController
+    }
 
-    /**
-     * @param string $controller
-     * @param string $path
-     */
     public function setController(string $controller, string $path): void
     {
-        // Prepara a string da rota
         $autoload_controller = "{$this->builder->getControllersNamespace()}{$controller}";
 
-        // Se o arquivo não existir
         if (!file_exists("{$path}/{$controller}.php")) {
-            throw new TypeError("The file \"{$controller}.php\" doesn't exist on Controllers folder.'", 501);
-        } // if
+            throw new TypeError("The file '{$controller}.php' doesn't exist on Controllers folder.'", 501);
+        }
 
-        // Se a classe não existir
         if (!class_exists($autoload_controller, true)) {
-            throw new TypeError("The class \"{$controller}\" doesn't exist on {$autoload_controller}.'", 501);
-        }  // if
+            throw new TypeError("The class '{$controller}' doesn't exist on {$autoload_controller}.'", 501);
+        }
 
         // Instancia o Controller requisitado na url
         $this->controller = new $autoload_controller((object)[]);
-    } // setController
+    }
 
-    /**
-	 * @return mixed
-	 */
-    private function getMethod()
+    private function getMethod(): string
     {
         return $this->method;
-    } // getMethod
+    }
 
-    /**
-	 * @param string $method
-	 * @throws TypeError
-	 */
     public function setMethod(string $method): void
     {
-        // Se o método que estiver na url existir, execute-o
         if (!method_exists($this->getController(), $method)) {
 			$class_name = get_class($this->getController());
-			throw new TypeError("The method \"{$method}\" doesn't exist on controller {$class_name}.", 501);
-		} // if
+			throw new TypeError("The method '{$method}' doesn't exist on controller {$class_name}.", 501);
+		}
 
 		// Atribui o índice 1 da url ao método
 		$this->method = $method;
-	} // setMethod
-} // Dispatch
+	}
+}
